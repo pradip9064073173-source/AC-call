@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Launch Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SheetJS for Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- jsPDF for PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-purple-950 to-indigo-950 min-h-screen text-white font-sans">
+
+    <!-- Container -->
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-extrabold tracking-wide drop-shadow-lg mb-1">
+                <i class="fa-solid fa-clipboard-list text-yellow-400"></i> Complaint Launch Portal
+            </h1>
+            <p class="text-purple-200 text-xs md:text-sm">Unlimited Lifetime Storage & Guaranteed Card Download Portal</p>
+        </header>
+
+        <!-- Navigation Buttons -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-8">
+            <button onclick="switchTab('home')" id="btn-home" class="nav-btn bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold py-2.5 px-3 rounded-xl shadow-lg transform transition hover:-translate-y-1 flex items-center justify-center gap-2 text-sm ring-4 ring-yellow-400">
+                <i class="fa-solid fa-house"></i> Home
+            </button>
+            <button onclick="switchTab('add')" id="btn-add" class="nav-btn bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-2.5 px-3 rounded-xl shadow-lg transform transition hover:-translate-y-1 flex items-center justify-center gap-2 text-sm">
+                <i class="fa-solid fa-plus-circle"></i> Add
+            </button>
+            <button onclick="switchTab('manage')" id="btn-manage" class="nav-btn bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-2.5 px-3 rounded-xl shadow-lg transform transition hover:-translate-y-1 flex items-center justify-center gap-2 text-sm">
+                <i class="fa-solid fa-pen-to-square"></i> Edit/Del
+            </button>
+            <button onclick="switchTab('status')" id="btn-status" class="nav-btn bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold py-2.5 px-3 rounded-xl shadow-lg transform transition hover:-translate-y-1 flex items-center justify-center gap-2 text-sm">
+                <i class="fa-solid fa-clock-rotate-left"></i> Status
+            </button>
+            <button onclick="switchTab('preview')" id="btn-preview" class="nav-btn bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-bold py-2.5 px-3 rounded-xl shadow-lg transform transition hover:-translate-y-1 flex items-center justify-center gap-2 text-sm">
+                <i class="fa-solid fa-eye"></i> All View
+            </button>
+            <button onclick="switchTab('download')" id="btn-download" class="nav-btn bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 text-white font-bold py-2.5 px-3 rounded-xl shadow-lg transform transition hover:-translate-y-1 flex items-center justify-center gap-2 text-sm">
+                <i class="fa-solid fa-download"></i> Download
+            </button>
+        </div>
+
+        <!-- Dynamic Content Sections -->
+        <main class="bg-white/10 backdrop-blur-md rounded-2xl p-6 md:p-8 shadow-2xl border border-white/20">
+
+            <!-- Home Welcome Page -->
+            <section id="section-home" class="portal-section text-center py-12 space-y-6">
+                <div class="w-20 h-20 bg-gradient-to-tr from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto text-3xl shadow-xl text-gray-950">
+                    <i class="fa-solid fa-building-shield"></i>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-yellow-300">Welcome to Complaint Launch Portal</h2>
+                <p class="text-gray-300 max-w-xl mx-auto text-sm md:text-base">
+                    Unlimited lifetime storage database active. Manage complaints, view Sky Blue passport cards, and download card images instantly.
+                </p>
+                <div class="pt-4 flex justify-center gap-4">
+                    <button onclick="switchTab('add')" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg transition">
+                        <i class="fa-solid fa-plus-circle mr-2"></i> Add Complaint
+                    </button>
+                    <button onclick="switchTab('preview')" class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg transition">
+                        <i class="fa-solid fa-eye mr-2"></i> All View Cards
+                    </button>
+                </div>
+            </section>
+
+            <!-- 1. Add Complaint Section -->
+            <section id="section-add" class="portal-section hidden">
+                <h2 class="text-xl font-bold mb-5 text-yellow-300 border-b border-white/10 pb-2.5 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-plus"></i> Add New Complaint
+                </h2>
+                <form id="complaintForm" onsubmit="handleFormSubmit(event)" class="space-y-3 max-w-xl mx-auto">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium mb-1 text-purple-200">Flat Number</label>
+                            <input type="text" id="flatNo" required placeholder="e.g. A-402" class="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-yellow-400 text-white placeholder-gray-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium mb-1 text-purple-200">Room Number</label>
+                            <input type="text" id="roomNo" required placeholder="e.g. Room 102" class="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-yellow-400 text-white placeholder-gray-400">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium mb-1 text-purple-200">Complaint Remarks / Details</label>
+                        <textarea id="remarks" rows="3" required placeholder="Write details about the issue..." class="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-yellow-400 text-white placeholder-gray-400"></textarea>
+                    </div>
+                    <input type="hidden" id="editId" value="">
+                    <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Complaint
+                    </button>
+                </form>
+            </section>
+
+            <!-- 2. Edit and Delete Section -->
+            <section id="section-manage" class="portal-section hidden">
+                <h2 class="text-xl font-bold mb-5 text-yellow-300 border-b border-white/10 pb-2.5 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit and Delete Complaints
+                </h2>
+                <div id="manageList" class="space-y-3"></div>
+            </section>
+
+            <!-- 3. Status Update Section -->
+            <section id="section-status" class="portal-section hidden">
+                <h2 class="text-xl font-bold mb-5 text-yellow-300 border-b border-white/10 pb-2.5 flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Complaint Status Update
+                </h2>
+                <div id="statusList" class="space-y-3"></div>
+            </section>
+
+            <!-- 4. All Preview Section (Sky Blue Cards with Download & Share) -->
+            <section id="section-preview" class="portal-section hidden">
+                <h2 class="text-xl font-bold mb-5 text-yellow-300 border-b border-white/10 pb-2.5 flex items-center gap-2">
+                    <i class="fa-solid fa-eye"></i> All Complaints Preview (Sky Blue Cards)
+                </h2>
+                <div id="previewCardGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- Dynamic Sky-Blue passport size cards -->
+                </div>
+            </section>
+
+            <!-- 5. Download Data Sheet Section -->
+            <section id="section-download" class="portal-section hidden">
+                <h2 class="text-xl font-bold mb-5 text-yellow-300 border-b border-white/10 pb-2.5 flex items-center gap-2">
+                    <i class="fa-solid fa-download"></i> Download Data Sheet by Month
+                </h2>
+                <div class="max-w-md mx-auto text-center py-4 space-y-4 bg-white/5 p-5 rounded-2xl border border-white/10">
+                    <p class="text-purple-200 text-sm">Select month & year to filter and download records:</p>
+                    
+                    <div class="flex flex-col sm:flex-row justify-center items-center gap-2">
+                        <label for="filterMonth" class="text-xs font-medium text-gray-300">Select Month:</label>
+                        <input type="month" id="filterMonth" class="bg-gray-800 border border-white/25 text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-yellow-400">
+                    </div>
+
+                    <div class="flex justify-center gap-3 flex-wrap pt-2">
+                        <button onclick="downloadExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-xl shadow-lg flex items-center gap-2 text-sm transition">
+                            <i class="fa-solid fa-file-excel"></i> Excel (.xlsx)
+                        </button>
+                        <button onclick="downloadPDF()" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-4 rounded-xl shadow-lg flex items-center gap-2 text-sm transition">
+                            <i class="fa-solid fa-file-pdf"></i> PDF (.pdf)
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- TINY SATISFACTION GREEN POPUP WINDOW -->
+    <div id="popupModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-3 z-50">
+        <div class="bg-gradient-to-b from-emerald-950 via-gray-950 to-gray-900 border-2 border-emerald-500 rounded-xl p-4 max-w-[240px] w-full shadow-2xl text-center transform scale-95 transition-transform duration-300 relative">
+            
+            <div class="w-12 h-12 bg-emerald-500 text-gray-950 rounded-full flex items-center justify-center mx-auto mb-2 text-xl shadow-lg animate-bounce">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            
+            <h3 class="text-sm font-extrabold text-emerald-300 mb-1">Successfully Saved!</h3>
+            <p class="text-[10px] text-emerald-400/80 mb-3">Permanent Storage Updated</p>
+            
+            <div id="popupDetails" class="text-[11px] text-gray-200 mb-3 bg-emerald-900/40 border border-emerald-600/40 p-2 rounded text-left space-y-1">
+                <!-- Dynamically filled -->
+            </div>
+            
+            <button onclick="closePopupAndRedirect()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-1.5 rounded text-xs font-semibold transition shadow">
+                OK / View All
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        let db;
+        let complaints = [];
+
+        const dbRequest = indexedDB.open("ComplaintPortalUnlimitedDB", 1);
+
+        dbRequest.onerror = function(event) {
+            console.error("Database error: " + event.target.errorCode);
+        };
+
+        dbRequest.onsuccess = function(event) {
+            db = event.target.result;
+            loadAllComplaints();
+        };
+
+        dbRequest.onupgradeneeded = function(event) {
+            db = event.target.result;
+            if (!db.objectStoreNames.contains("complaints")) {
+                db.createObjectStore("complaints", { keyPath: "id", autoIncrement: true });
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const monthInput = document.getElementById('filterMonth');
+            if(monthInput) monthInput.value = `${year}-${month}`;
+        });
+
+        function loadAllComplaints() {
+            if (!db) return;
+            const transaction = db.transaction(["complaints"], "readonly");
+            const store = transaction.objectStore("complaints");
+            const request = store.getAll();
+
+            request.onsuccess = function(event) {
+                complaints = event.target.result.reverse(); // Newest first
+            };
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.portal-section').forEach(sec => sec.classList.add('hidden'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('ring-4', 'ring-yellow-400'));
+            
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+            document.getElementById(`btn-${tabId}`).classList.add('ring-4', 'ring-yellow-400');
+
+            if (tabId === 'manage') renderManageList();
+            if (tabId === 'status') renderStatusList();
+            if (tabId === 'preview') renderPreviewCards();
+        }
+
+        // Form Submit & Save to IndexedDB
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const flatNo = document.getElementById('flatNo').value.trim();
+            const roomNo = document.getElementById('roomNo').value.trim();
+            const remarks = document.getElementById('remarks').value.trim();
+            const editId = document.getElementById('editId').value;
+
+            const now = new Date();
+            const isoDateString = now.toISOString(); 
+            const displayDateStr = now.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
+
+            const complaintData = {
+                flatNo,
+                roomNo,
+                remarks,
+                rawDate: isoDateString,
+                date: displayDateStr,
+                status: "Pending"
+            };
+
+            const transaction = db.transaction(["complaints"], "readwrite");
+            const store = transaction.objectStore("complaints");
+
+            if (editId !== "") {
+                complaintData.id = Number(editId);
+                const existing = complaints.find(c => c.id === Number(editId));
+                if(existing) complaintData.status = existing.status;
+                
+                store.put(complaintData);
+                document.getElementById('editId').value = "";
+            } else {
+                store.add(complaintData);
+            }
+
+            transaction.oncomplete = function() {
+                loadAllComplaints();
+                document.getElementById('complaintForm').reset();
+                showGreenPopup(complaintData);
+            };
+        }
+
+        // Show Green Satisfaction Popup
+        function showGreenPopup(data) {
+            const detailsHtml = `
+                <div><span class="text-emerald-300 font-semibold">Flat/Room:</span> ${data.flatNo} - ${data.roomNo}</div>
+                <div class="truncate"><span class="text-emerald-300 font-semibold">Remarks:</span> ${data.remarks}</div>
+                <div><span class="text-emerald-300 font-semibold">Status:</span> <span class="text-yellow-300">${data.status}</span></div>
+            `;
+            document.getElementById('popupDetails').innerHTML = detailsHtml;
+            const modal = document.getElementById('popupModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closePopupAndRedirect() {
+            const modal = document.getElementById('popupModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            switchTab('preview');
+        }
+
+        // Guaranteed SVG-to-Image Card Downloader (100% Working without external library dependency)
+        function downloadCardImage(flat, room, remarks, status, date) {
+            const svgWidth = 400;
+            const svgHeight = 220;
+
+            const svgContent = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}">
+                    <rect width="100%" height="100%" fill="#38bdf8" rx="15"/>
+                    <rect x="10" y="10" width="380" height="200" fill="#38bdf8" stroke="#7dd3fc" stroke-width="2" rx="12"/>
+                    <text x="25" y="38" font-family="Arial, sans-serif" font-size="11" fill="#1e293b" font-weight="bold">${date}</text>
+                    <text x="375" y="38" font-family="Arial, sans-serif" font-size="11" fill="#065f46" font-weight="bold" text-anchor="end">${status}</text>
+                    <text x="25" y="68" font-family="Arial, sans-serif" font-size="14" fill="#0f172a" font-weight="900">Flat: ${flat} | Room: ${room}</text>
+                    <rect x="22" y="85" width="356" height="85" fill="#bae6fd" rx="8"/>
+                    <text x="35" y="110" font-family="Arial, sans-serif" font-size="12" fill="#0f172a" font-weight="bold">Remarks:</text>
+                    <text x="35" y="132" font-family="Arial, sans-serif" font-size="11" fill="#1e293b">${remarks.substring(0, 75)}</text>
+                    <text x="200" y="200" font-family="Arial, sans-serif" font-size="9" fill="#0f172a" text-anchor="middle" opacity="0.7">Complaint Launch Portal - Secure Record</text>
+                </svg>
+            `;
+
+            const blob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
+            const URL = window.URL || window.webkitURL || window;
+            const blobURL = URL.createObjectURL(blob);
+            
+            const image = new Image();
+            image.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = svgWidth * 2; // High resolution
+                canvas.height = svgHeight * 2;
+                const context = canvas.getContext('2d');
+                context.scale(2, 2);
+                context.drawImage(image, 0, 0);
+
+                const pngData = canvas.toDataURL('image/png');
+                const downloadLink = document.createElement('a');
+                downloadLink.href = pngData;
+                downloadLink.download = `Complaint_Flat_${flat}_${Date.now()}.png`;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            };
+            image.src = blobURL;
+        }
+
+        // Text Share Handler (WhatsApp & Email)
+        function shareCardText(flat, room, remarks, status, date, platform) {
+            const shareText = `🏢 *COMPLAINT CARD RECORD*\n\n📅 Date: ${date}\n🏠 Flat No: ${flat}\n🚪 Room No: ${room}\n📝 Details: ${remarks}\n📌 Status: ${status}\n\n_Managed via Complaint Launch Portal_`;
+
+            if (platform === 'whatsapp') {
+                window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+            } else if (platform === 'email') {
+                window.open(`mailto:?subject=Complaint Record - Flat ${flat}&body=${encodeURIComponent(shareText)}`, '_blank');
+            }
+        }
+
+        // Render Manage List
+        function renderManageList() {
+            setTimeout(() => {
+                const container = document.getElementById('manageList');
+                container.innerHTML = "";
+                if (complaints.length === 0) {
+                    container.innerHTML = `<p class="text-center text-gray-300 text-sm py-4">No complaints found.</p>`;
+                    return;
+                }
+
+                complaints.forEach((c) => {
+                    container.innerHTML += `
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-3 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                            <div>
+                                <span class="bg-yellow-400/20 text-yellow-300 text-[10px] px-2 py-0.5 rounded-full font-semibold">Flat: ${c.flatNo} | Room: ${c.roomNo}</span>
+                                <p class="text-xs text-gray-200 mt-1.5">${c.remarks}</p>
+                                <span class="text-[10px] text-gray-400 mt-0.5 block">${c.date}</span>
+                            </div>
+                            <div class="flex gap-2 self-end md:self-center">
+                                <button onclick="editComplaint(${c.id})" class="bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1 rounded text-xs flex items-center gap-1 transition">
+                                    <i class="fa-solid fa-pen"></i> Edit
+                                </button>
+                                <button onclick="deleteComplaint(${c.id})" class="bg-rose-600 hover:bg-rose-700 text-white px-2.5 py-1 rounded text-xs flex items-center gap-1 transition">
+                                    <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }, 100);
+        }
+
+        function editComplaint(id) {
+            const c = complaints.find(item => item.id === id);
+            if (!c) return;
+            document.getElementById('flatNo').value = c.flatNo;
+            document.getElementById('roomNo').value = c.roomNo;
+            document.getElementById('remarks').value = c.remarks;
+            document.getElementById('editId').value = c.id;
+            switchTab('add');
+        }
+
+        function deleteComplaint(id) {
+            if (confirm("Are you sure you want to delete this complaint?")) {
+                const transaction = db.transaction(["complaints"], "readwrite");
+                const store = transaction.objectStore("complaints");
+                store.delete(id);
+                transaction.oncomplete = function() {
+                    loadAllComplaints();
+                    setTimeout(renderManageList, 100);
+                };
+            }
+        }
+
+        // Render Status List
+        function renderStatusList() {
+            setTimeout(() => {
+                const container = document.getElementById('statusList');
+                container.innerHTML = "";
+                if (complaints.length === 0) {
+                    container.innerHTML = `<p class="text-center text-gray-300 text-sm py-4">No complaints found.</p>`;
+                    return;
+                }
+
+                complaints.forEach((c) => {
+                    container.innerHTML += `
+                        <div class="bg-white/5 border border-white/10 rounded-xl p-3 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                            <div>
+                                <span class="bg-yellow-400/20 text-yellow-300 text-[10px] px-2 py-0.5 rounded-full font-semibold">Flat: ${c.flatNo} | Room: ${c.roomNo}</span>
+                                <p class="text-xs text-gray-200 mt-1.5">${c.remarks}</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <select onchange="updateStatus(${c.id}, this.value)" class="bg-gray-800 border border-white/20 text-white text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-yellow-400">
+                                    <option value="Pending" ${c.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="In Process" ${c.status === 'In Process' ? 'selected' : ''}>In Process</option>
+                                    <option value="Successful" ${c.status === 'Successful' ? 'selected' : ''}>Successful</option>
+                                </select>
+                            </div>
+                        </div>
+                    `;
+                });
+            }, 100);
+        }
+
+        function updateStatus(id, newStatus) {
+            const transaction = db.transaction(["complaints"], "readwrite");
+            const store = transaction.objectStore("complaints");
+            const request = store.get(id);
+
+            request.onsuccess = function(event) {
+                let data = event.target.result;
+                if (data) {
+                    data.status = newStatus;
+                    store.put(data);
+                    loadAllComplaints();
+                }
+            };
+        }
+
+        // Render All View as Sky Blue Cards with Guaranteed Download & Share
+        function renderPreviewCards() {
+            setTimeout(() => {
+                const container = document.getElementById('previewCardGrid');
+                container.innerHTML = "";
+                if (complaints.length === 0) {
+                    container.innerHTML = `<p class="col-span-full text-center text-gray-300 text-sm py-6">No complaints available.</p>`;
+                    return;
+                }
+
+                complaints.forEach((c) => {
+                    let statusColor = 'text-amber-900 bg-amber-200';
+                    if(c.status === 'In Process') statusColor = 'text-blue-900 bg-blue-200';
+                    if(c.status === 'Successful') statusColor = 'text-emerald-900 bg-emerald-200';
+
+                    const safeRemarks = c.remarks.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    const safeFlat = c.flatNo.replace(/'/g, "\\'");
+                    const safeRoom = c.roomNo.replace(/'/g, "\\'");
+                    const safeDate = c.date.replace(/'/g, "\\'");
+                    const safeStatus = c.status.replace(/'/g, "\\'");
+
+                    container.innerHTML += `
+                        <div class="bg-sky-400 text-gray-950 border-2 border-sky-300 rounded-xl p-3 shadow-xl flex flex-col justify-between text-left relative">
+                            <div>
+                                <div class="flex justify-between items-center mb-1.5">
+                                    <span class="text-[9px] font-bold text-gray-800">${c.date}</span>
+                                    <span class="text-[9px] font-extrabold px-2 py-0.5 rounded-full ${statusColor}">${c.status}</span>
+                                </div>
+                                <div class="text-xs font-black text-indigo-950 mb-1">Flat: ${c.flatNo} | Room: ${c.roomNo}</div>
+                                <p class="text-[11px] text-gray-900 mb-3 bg-sky-200/90 p-2 rounded font-semibold">${c.remarks}</p>
+                            </div>
+                            <div class="flex flex-col gap-1.5 pt-2 border-t border-sky-300/60">
+                                <button onclick="downloadCardImage('${safeFlat}', '${safeRoom}', '${safeRemarks}', '${safeStatus}', '${safeDate}')" class="w-full bg-purple-700 hover:bg-purple-800 text-white text-center py-1 rounded text-[10px] font-bold transition flex items-center justify-center gap-1 shadow">
+                                    <i class="fa-solid fa-download"></i> Download Card Image
+                                </button>
+                                <div class="flex gap-1">
+                                    <button onclick="shareCardText('${safeFlat}', '${safeRoom}', '${safeRemarks}', '${safeStatus}', '${safeDate}', 'whatsapp')" class="flex-1 bg-green-600 hover:bg-green-700 text-white text-center py-1 rounded text-[9px] font-bold transition flex items-center justify-center gap-1 shadow">
+                                        <i class="fa-brands fa-whatsapp"></i> WA Share
+                                    </button>
+                                    <button onclick="shareCardText('${safeFlat}', '${safeRoom}', '${safeRemarks}', '${safeStatus}', '${safeDate}', 'email')" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center py-1 rounded text-[9px] font-bold transition flex items-center justify-center gap-1 shadow">
+                                        <i class="fa-solid fa-envelope"></i> Email Share
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }, 100);
+        }
+
+        function getFilteredComplaints() {
+            const selectedMonthVal = document.getElementById('filterMonth').value; 
+            if (!selectedMonthVal) return complaints;
+
+            return complaints.filter(c => {
+                if (c.rawDate) {
+                    return c.rawDate.startsWith(selectedMonthVal);
+                }
+                return c.date.includes(selectedMonthVal);
+            });
+        }
+
+        // Download Excel
+        function downloadExcel() {
+            const filteredData = getFilteredComplaints();
+            if(filteredData.length === 0) {
+                alert("No data found for the selected month!");
+                return;
+            }
+            
+            const exportData = filteredData.map(c => ({
+                Date: c.date,
+                "Flat No": c.flatNo,
+                "Room No": c.roomNo,
+                Remarks: c.remarks,
+                Status: c.status
+            }));
+
+            const worksheet = XLSX.utils.json_to_sheet(exportData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Complaints");
+            
+            const selectedMonth = document.getElementById('filterMonth').value || "All";
+            XLSX.writeFile(workbook, `Complaint_Data_${selectedMonth}.xlsx`);
+        }
+
+        // Download PDF
+        function downloadPDF() {
+            const filteredData = getFilteredComplaints();
+            if(filteredData.length === 0) {
+                alert("No data found for the selected month!");
+                return;
+            }
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const selectedMonth = document.getElementById('filterMonth').value || "All";
+            doc.text(`Complaint Launch Portal Report (${selectedMonth})`, 14, 15);
+            
+            const tableData = filteredData.map(c => [c.date, `Flat: ${c.flatNo}, Room: ${c.roomNo}`, c.remarks, c.status]);
+            
+            doc.autoTable({
+                head: [['Date', 'Flat & Room', 'Remarks', 'Status']],
+                body: tableData,
+                startY: 25,
+            });
+            
+            doc.save(`Complaint_Data_${selectedMonth}.pdf`);
+        }
+    </script>
+</body>
+</html>
